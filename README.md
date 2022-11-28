@@ -1,5 +1,6 @@
 # space-shooter
-It is a game made in vanillajs
+It is a game made in vanillajs.
+
 It is still in the process of making
 
 ## HOW TO PLAY
