@@ -1,3 +1,5 @@
+const gameMenu = document.querySelector('.menu')
+const startGameBtn = document.querySelector('#start-game-btn')
 const canvas = document.querySelector('#space-bg')
 const ctx = canvas.getContext('2d');
 
@@ -5,6 +7,14 @@ const CANVAS_WIDTH = canvas.width
 const CANVAS_HEIGHT = canvas.height
 
 
+class Game{
+  constructor(){
+    this.gameOver = true
+    this.gameSpeed = 0
+  }
+}
+
+const game = new Game()
 
 class SpaceShip{
     constructor(){
@@ -20,9 +30,10 @@ class SpaceShip{
     }
 
     draw(){
-        ctx.drawImage(this.image,0,0,this.spriteWidth,this.spriteHeight,this.x,this.y,this.width,this.height)
+      ctx.drawImage(this.image,0,0,this.spriteWidth,this.spriteHeight,this.x,this.y,this.width,this.height)
     }
 }
+
 
 class Bullet {
   constructor(x, y) {
@@ -36,10 +47,11 @@ class Bullet {
     this.y = y;
   }
 
-  update() {
-    this.y -= 1 * this.speed;
+  update(idx) {
+    this.y -= 1 * this.speed* game.gameSpeed;
+    // remove the bullet if it passes the canvas
+    if (this.y < 0) bullets.splice(idx, 1);
   }
-
 
   draw() {
     ctx.fillStyle = "#" + this.color;
@@ -62,8 +74,6 @@ class Star {
 }
 
 
-
-
 class Enemy{
     constructor(moveType="zig-zag",x=null,y=null){
         const img= new Image()
@@ -77,13 +87,14 @@ class Enemy{
         if (y === null) this.y = -this.height;
         else this.y = y;
         this.horizontalSpeed = 4
-        this.downSpeed = 0.5
+        this.downSpeed = 2
         this.counter = 0
         this.angle = 2;
         this.movementType = moveType
     }
 
     update(){
+        if(game.gameSpeed==0) return 
         if(this.movementType === 'zig-zag'){
             // movement - 1 : zigzag
             this.x+=1*this.horizontalSpeed
@@ -98,7 +109,6 @@ class Enemy{
             this.angle += 1;
             this.y += 1 * this.downSpeed;
         }
-
         // check for game-over after very update
         this.#isGameOver()
 
@@ -107,7 +117,10 @@ class Enemy{
     #isGameOver(){
         // check if the enemy touches the canvas border in downside
         if(this.y+this.height>CANVAS_HEIGHT){
-            alert("Game Over!!!");
+          // game.toggleGameOver()
+          game.gameOver = true
+          game.gameSpeed = 0
+          alert('Game Over!!!')
         }
     }
 
@@ -153,21 +166,6 @@ class Explosion {
   }
 }
 
-
-const heroShip = new SpaceShip()
-const bullets = []
-
-const stars = []
-for(let i=0;i<70;i++){
-    stars.push(new Star())
-}
-
-const explosions = []
-
-enemies = []
-// enemyWave1(5,"sine-wave")
-enemyWave2(5)
-
 function enemyWave1(n=5,movementType){
     // add enemies after 2 second time gap at random postions in canvas
     for(let i=0;i<n;i++){
@@ -190,42 +188,61 @@ function enemyWave2(n = 5, movementType) {
   }
 }
 
+const heroShip = new SpaceShip();
+const stars = [];
+const bullets = [];
+const enemies = [];
+const explosions = [];
+enemyWave1(1);
 
-function animate(){
-    ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT)
-    // draw stars
-    stars.forEach((s)=>{
-        s.draw()
-    })
-
-    // draw heroship
-    heroShip.draw()
-
-    // animate bullets from heroship
-    bullets.forEach((b)=>{
-        b.update()
-        b.draw()
-    })
-
-    // enemy animation
-    enemies.forEach((enemy)=>{
-        enemy.update()
-        enemy.draw()
-    })
-
-    // check for collision
-    checkCollision()
-
-    // explosion animation
-    explosions.forEach((exp,idx)=>{
-        exp.update(idx)
-        exp.draw()
-    })
-
-    requestAnimationFrame(animate)
+for (let i = 0; i < 70; i++) {
+  stars.push(new Star());
 }
 
-animate()
+// draw stars
+stars.forEach((s) => {
+  s.draw();
+});
+
+
+
+
+function animate(){
+  ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+  // draw stars
+  stars.forEach((s) => {
+    s.draw();
+  });
+
+  // draw heroship
+  heroShip.draw();
+
+  // animate bullets from heroship
+  bullets.forEach((b, idx) => {
+    b.update(idx);
+    b.draw();
+  });
+
+  // enemy animation
+  enemies.forEach((enemy) => {
+    enemy.update();
+    enemy.draw();
+  });
+
+  // check for collision
+  checkCollision();
+
+  // explosion animation
+  explosions.forEach((exp, idx) => {
+    exp.update(idx);
+    exp.draw();
+  });
+
+  // if(game.gameSpeed)
+  requestAnimationFrame(animate);
+  // else return
+}
 
 
 /////////// Event Listeners 
@@ -238,22 +255,40 @@ window.addEventListener("keydown", (e) => {
 });
 
 window.addEventListener("mousemove", (e) => {
+  // if (!(game.gameSpeed && game.gameOver)) return; 
   heroShip.x = e.clientX;
 });
+
 
 
 function checkCollision() {
     bullets.forEach((b,b_idx)=>{
             enemies.forEach((e, e_idx) => {
                 if (
-                    (b.y<(e.y+e.width) && b.width+b.y<e.y) &&
+                    (b.y<(e.y+e.height) && (b.y+b.height)<(e.y+e.height)) &&
                 (b.x>e.x && (b.x+b.width)<(e.x+e.width))
             ) {
-                // collision happens
                 explosions.push(new Explosion(e.x+e.width/2,e.y+e.height/2))
                 enemies.splice(e_idx, 1);
                 bullets.splice(b_idx,1)
             }
         })
     })
+}
+
+startGameBtn.addEventListener('click',()=>{
+  // game.startGame()
+  game.gameSpeed = 1
+  game.gameOver= false
+  gameMenu.style.display = "none";
+  animate()
+})
+
+window.addEventListener('keydown',(e)=>{
+  if(e.key ==='Escape'){
+    game.gameSpeed = 0
+    gameMenu.style.display = 'flex'
+    // game.pauseGame()
   }
+})
+
