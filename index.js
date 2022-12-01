@@ -225,7 +225,7 @@ const stars = [];
 const bullets = [];
 const enemies = [];
 const explosions = [];
-enemyWave1(1);
+//enemyWave1(1);
 
 for (let i = 0; i < 70; i++) {
   stars.push(new Star());
