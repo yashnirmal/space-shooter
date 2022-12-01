@@ -8,4 +8,7 @@ Web Link : https://space-shooter-101.netlify.app/
 ## HOW TO PLAY
 - Move your mouse to move the ship
 - press space to shoot 
+- press 'Esc' to open up the 'Game Menu'
+	- press 'Start new Game' to start new game
+	- press 'Resume Game' to resume the currently paused game
 
