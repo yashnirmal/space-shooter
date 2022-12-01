@@ -1,5 +1,6 @@
 const gameMenu = document.querySelector('.menu')
 const startGameBtn = document.querySelector('#start-game-btn')
+const resumeGameBtn = document.querySelector('#resume-game-btn')
 const canvas = document.querySelector('#space-bg')
 const ctx = canvas.getContext('2d');
 
@@ -12,6 +13,40 @@ class Game{
     this.gameOver = true
     this.gameSpeed = 0
   }
+
+  pauseGame(){
+    this.gameSpeed = 0
+    gameMenu.style.display = 'flex'
+  }
+
+  resumeGame(){
+    game.gameSpeed = 1;
+    game.gameOver = false;
+    gameMenu.style.display = "none";
+    animate();
+  }
+
+  gameOver(){
+    this.gameOver = true
+    this.gameSpeed = 0
+    gameMenu.style.display = 'flex'
+    bullets.splice(0,bullets.length)
+    enemies.splice(0,enemies.length)
+    explosions.splice(0,explosions.length)
+    heroShip = null
+  }
+
+  startNewGame(){
+    gameMenu.style.display = "flex";
+    bullets.splice(0, bullets.length);
+    enemies.splice(0, enemies.length);
+    explosions.splice(0, explosions.length);
+    heroShip = null;
+    enemyWave1(1)
+    heroShip = new SpaceShip()
+    this.resumeGame();
+  }
+
 }
 
 const game = new Game()
@@ -117,10 +152,7 @@ class Enemy{
     #isGameOver(){
         // check if the enemy touches the canvas border in downside
         if(this.y+this.height>CANVAS_HEIGHT){
-          // game.toggleGameOver()
-          game.gameOver = true
-          game.gameSpeed = 0
-          alert('Game Over!!!')
+          game.gameOver()
         }
     }
 
@@ -188,7 +220,7 @@ function enemyWave2(n = 5, movementType) {
   }
 }
 
-const heroShip = new SpaceShip();
+let heroShip = new SpaceShip();
 const stars = [];
 const bullets = [];
 const enemies = [];
@@ -239,13 +271,15 @@ function animate(){
     exp.draw();
   });
 
-  // if(game.gameSpeed)
+  if(game.gameSpeed==1)
   requestAnimationFrame(animate);
-  // else return
+  else return
 }
 
 
-/////////// Event Listeners 
+
+/////////// Event Listeners ///////////////
+
 window.addEventListener("keydown", (e) => {
   // add bullets
   if (e.key === " ") {
@@ -255,10 +289,9 @@ window.addEventListener("keydown", (e) => {
 });
 
 window.addEventListener("mousemove", (e) => {
-  // if (!(game.gameSpeed && game.gameOver)) return; 
+  if (game.gameSpeed===0) return; 
   heroShip.x = e.clientX;
 });
-
 
 
 function checkCollision() {
@@ -276,19 +309,17 @@ function checkCollision() {
     })
 }
 
+resumeGameBtn.addEventListener('click',()=>{
+  game.resumeGame()
+})
+
 startGameBtn.addEventListener('click',()=>{
-  // game.startGame()
-  game.gameSpeed = 1
-  game.gameOver= false
-  gameMenu.style.display = "none";
-  animate()
+  game.startNewGame()
 })
 
 window.addEventListener('keydown',(e)=>{
   if(e.key ==='Escape'){
-    game.gameSpeed = 0
-    gameMenu.style.display = 'flex'
-    // game.pauseGame()
+    game.pauseGame()
   }
 })
 
