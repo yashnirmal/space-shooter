@@ -7,16 +7,51 @@
     <title>Space shooter</title>
     <link rel="stylesheet" href="style.css">    
     <script src="index.js" defer></script>
+    <script src="game-menu.js" defer></script>
 </head>
 <body>
     <canvas id="space-bg" width='1800px' height='900px'></canvas>
     <div class="menu">
         <div class="menu-container">
-            <p class="menu-cont-heading">Menu</p>
-            <button id="start-game-btn">Start New Game</button>
-            <button id="resume-game-btn">Resume Game</button>
-            <button>Choose Level</button>
-            <button>See Highscore</button>
+            <div class="menu-main" data-status="active">
+                <p class="menu-cont-heading">Menu</p>
+                <button id="start-game-btn">Start New Game</button>
+                <button id="resume-game-btn">Resume Game</button>
+                <button id="choose-level-btn">Choose Level</button>
+                <button id="see-highscore-btn">See Highscore</button>
+                <div id="menu-music-sfx">
+                    <button data-active="true">Music</button>
+                    <button data-active="true">SFX</button>
+                </div>
+            </div>
+            <div class="menu-level" data-status="inactive">
+                <p class="menu-cont-heading">Choose Level</p>
+                <button>Easy</button>
+                <button>Medium</button>
+                <button>Hard</button>
+                <button>Impossible</button>
+                <button id="sub-menu-back-btn">&#8678; Back</button>
+            </div>
+            <div class="menu-highscore" data-status="inactive">
+                <p class="menu-cont-heading">Highscores</p>
+                <div class="highscore-score-div">
+                    <span>Easy</span>
+                    <span>0</span>
+                </div>
+                <div class="highscore-score-div">
+                    <span>Medium</span>
+                    <span>0</span>
+                </div>
+                <div class="highscore-score-div">
+                    <span>Hard</span>
+                    <span>0</span>
+                </div>
+                <div class="highscore-score-div">
+                    <span>Impossible</span>
+                    <span>0</span>
+                </div>
+                <button id="sub-menu-back-btn">&#8678; Back</button>
+            </div>
         </div>
     </div>
 </body>

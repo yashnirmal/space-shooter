@@ -1,17 +1,22 @@
 const gameMenu = document.querySelector('.menu')
 const startGameBtn = document.querySelector('#start-game-btn')
 const resumeGameBtn = document.querySelector('#resume-game-btn')
+const musicSfxToggle = document.querySelectorAll("#menu-music-sfx>button");
 const canvas = document.querySelector('#space-bg')
 const ctx = canvas.getContext('2d');
 
+
 const CANVAS_WIDTH = canvas.width
 const CANVAS_HEIGHT = canvas.height
-
 
 class Game{
   constructor(){
     this.gameOver = true
     this.gameSpeed = 0
+    this.music = new Audio("./assets/sounds/music/music1.mp3");
+    this.music.loop = true
+    this.music.play()
+    this.isSfxOn = true
   }
 
   pauseGame(){
@@ -26,7 +31,7 @@ class Game{
     animate();
   }
 
-  gameOver(){
+  doGameOver(){
     this.gameOver = true
     this.gameSpeed = 0
     gameMenu.style.display = 'flex'
@@ -37,12 +42,8 @@ class Game{
   }
 
   startNewGame(){
-    gameMenu.style.display = "flex";
-    bullets.splice(0, bullets.length);
-    enemies.splice(0, enemies.length);
-    explosions.splice(0, explosions.length);
-    heroShip = null;
-    enemyWave1(1)
+    this.doGameOver()
+    enemyWaveController()
     heroShip = new SpaceShip()
     this.resumeGame();
   }
@@ -54,7 +55,7 @@ const game = new Game()
 class SpaceShip{
     constructor(){
         const img = new Image()
-        img.src = "./assets/hero.png"
+        img.src = "./assets/pics/hero.png"
         this.image = img
         this.spriteWidth = 401
         this.spriteHeight = 317
@@ -112,7 +113,7 @@ class Star {
 class Enemy{
     constructor(moveType="zig-zag",x=null,y=null){
         const img= new Image()
-        img.src = "./assets/enemy.png"
+        img.src = "./assets/pics/enemy.png"
         this.image = img
         this.spriteWidth = 431
         this.spriteHeight = 431
@@ -122,13 +123,13 @@ class Enemy{
         if (y === null) this.y = -this.height;
         else this.y = y;
         this.horizontalSpeed = 4
-        this.downSpeed = 2
+        this.downSpeed = 1
         this.counter = 0
         this.angle = 2;
         this.movementType = moveType
     }
 
-    update(){
+    update(idx){
         if(game.gameSpeed==0) return 
         if(this.movementType === 'zig-zag'){
             // movement - 1 : zigzag
@@ -144,6 +145,12 @@ class Enemy{
             this.angle += 1;
             this.y += 1 * this.downSpeed;
         }
+
+        //if enemy goes out of canvas remove it
+        if(this.x>CANVAS_WIDTH || this.x+this.width<0){
+          enemies.splice(idx,1)
+        }
+
         // check for game-over after very update
         this.#isGameOver()
 
@@ -152,7 +159,7 @@ class Enemy{
     #isGameOver(){
         // check if the enemy touches the canvas border in downside
         if(this.y+this.height>CANVAS_HEIGHT){
-          game.gameOver()
+          game.doGameOver()
         }
     }
 
@@ -172,10 +179,16 @@ class Explosion {
     this.frame = 0;
     this.slower = 0;
     this.image = new Image();
-    this.image.src = "./assets/boom.png";
+    this.image.src = "./assets/pics/boom.png";
+    this.sound = new Audio()
+    this.sound.src = "./assets/sounds/sfx/explosion.mp3"
   }
 
   update(idx) {
+    if(game.isSfxOn && this.frame === 0){
+        this.sound.play()
+      }
+      
     this.slower++;
     if (this.slower % 5 == 0) {
       if (this.frame < 5) this.frame++;
@@ -198,26 +211,47 @@ class Explosion {
   }
 }
 
-function enemyWave1(n=5,movementType){
+function enemyWaveController(){
+
+  function enemyWave1(n=5,movementType){
     // add enemies after 2 second time gap at random postions in canvas
     for(let i=0;i<n;i++){
         setTimeout(()=>{
             enemies.push(new Enemy(movementType));
         },2000*i)
     }
-}
-
-function enemyWave2(n = 5, movementType) {
-  // add enemies after 2 second time gap at random postions in canvas
-  let e = new Enemy(movementType);
-  let startX = e.x
-  let startY = e.y
-  enemies.push(e)
-  for (let i = 0; i < n-1; i++) {
-    setTimeout(() => {
-        enemies.push(new Enemy(movementType,startX,startY));
-    }, 700* (i+1));
   }
+  
+  
+  function enemyWave2(n = 5, movementType) {
+    // add enemies after 2 second time gap at random postions in canvas
+    let e = new Enemy(movementType);
+    let startX = e.x
+    let startY = e.y
+    enemies.push(e)
+    for (let i = 0; i < n-1; i++) {
+      setTimeout(() => {
+        enemies.push(new Enemy(movementType,startX,startY));
+      }, 700* (i+1));
+    }
+  }
+
+  enemyWave1()
+  setInterval(()=>{
+    if(game.gameSpeed!==0){
+      let numberOfEnemies = parseInt(Math.random()*2+4)
+      let whichWave =Math.random()
+      let whichMovement = Math.random()
+      if(whichWave>0.5){
+        if(whichMovement>0.5) enemyWave1(numberOfEnemies, "sine-wave");
+        else enemyWave1(numberOfEnemies,"zig-zag");
+      }
+      else{
+        if (whichMovement > 0.5) enemyWave2(numberOfEnemies, "sine-wave");
+        else enemyWave2(numberOfEnemies,"zig-zag");
+      }
+    }
+  },10000)
 }
 
 let heroShip = new SpaceShip();
@@ -257,8 +291,8 @@ function animate(){
   });
 
   // enemy animation
-  enemies.forEach((enemy) => {
-    enemy.update();
+  enemies.forEach((enemy,idx) => {
+    enemy.update(idx);
     enemy.draw();
   });
 
@@ -323,3 +357,24 @@ window.addEventListener('keydown',(e)=>{
   }
 })
 
+musicSfxToggle[0].addEventListener('click',()=>{
+  console.log('here')
+  if(musicSfxToggle[0].dataset.active==="true"){
+    game.music.pause()
+    musicSfxToggle[0].dataset.active="false";
+  }else{
+    game.music.play()
+    musicSfxToggle[0].dataset.active="true";
+  }
+})
+
+musicSfxToggle[1].addEventListener('click',()=>{
+  console.log("here");
+  if (musicSfxToggle[1].dataset.active === "true") {
+    game.isSfxOn = false
+    musicSfxToggle[1].dataset.active = "false";
+  } else {
+    game.isSfxOn=true
+    musicSfxToggle[1].dataset.active = "true";
+  }
+})

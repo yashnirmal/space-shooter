@@ -34,7 +34,12 @@ body{
 }
 
 .menu-container{
-    width: 20%;
+    width: 90%;
+    max-width: 400px;
+}
+
+.menu-container>div{
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -62,11 +67,39 @@ button:hover{
     color: black;
 }
 
-p{
+p,span{
     font-size: 1.4rem;
     font-weight: bold;
 }
 
 .menu-cont-heading{
     margin-bottom: 20px;
+}
+
+.highscore-score-div{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.menu-container>div[data-status='inactive']{
+    display: none;
+}
+
+.menu-container>div[data-status='active']{
+    display: flex;
+}
+
+#menu-music-sfx{
+    width: 100%;
+    display: flex;
+    gap: 20px;
+}
+
+#menu-music-sfx>button[data-active=false]{
+    text-decoration: line-through;
+}
+
+#menu-music-sfx>button[data-active=true]{
+    text-decoration: none;
 }
