@@ -2,21 +2,35 @@ const gameMenu = document.querySelector('.menu')
 const startGameBtn = document.querySelector('#start-game-btn')
 const resumeGameBtn = document.querySelector('#resume-game-btn')
 const musicSfxToggle = document.querySelectorAll("#menu-music-sfx>button");
-const canvas = document.querySelector('#space-bg')
+const menuLvlBtns = document.querySelectorAll('#menu-level-btn');
+const mainMenuChooseLvlBtn = document.querySelector('#choose-level-btn');
+const canvas = document.querySelector('#space-bg');
 const ctx = canvas.getContext('2d');
-
+let initialDifficulty = null;
 
 const CANVAS_WIDTH = canvas.width
 const CANVAS_HEIGHT = canvas.height
 
+
+
+mainMenuChooseLvlBtn.innerText =
+ ("Choose Level : " +
+    localStorage.getItem("game-level")[0].toUpperCase() +
+    localStorage.getItem("game-level").substring(1) )|| "Easy";
+
 class Game{
   constructor(){
-    this.gameOver = true
-    this.gameSpeed = 0
+    this.gameOver = true;
+    this.gameSpeed = 0;
     this.music = new Audio("./assets/sounds/music/music1.mp3");
-    this.music.loop = true
-    this.music.play()
-    this.isSfxOn = true
+    this.music.loop = true;
+    this.music.play();
+    this.isSfxOn = true;
+    this.difficulty = localStorage.getItem("game-level") || "easy";
+    this.firingSpeed = 1; // heroship.firingSpeed = 5+2*game.firingSpeed;
+    this.enemyNumber = 5;
+    this.enemyDownSpeed = 0; //enemy.downSpeed = 1+game.downSpeed;
+    this.enemyWaveInterval = 1;
   }
 
   pauseGame(){
@@ -43,173 +57,21 @@ class Game{
 
   startNewGame(){
     this.doGameOver()
+    // changeGameDifficultyParameters();
     enemyWaveController()
     heroShip = new SpaceShip()
     this.resumeGame();
   }
-
 }
 
 const game = new Game()
+let heroShip = new SpaceShip();
+const stars = [];
+const bullets = [];
+const enemies = [];
+const explosions = [];
+setResumeGameBtnVisibility();
 
-class SpaceShip{
-    constructor(){
-        const img = new Image()
-        img.src = "./assets/pics/hero.png"
-        this.image = img
-        this.spriteWidth = 401
-        this.spriteHeight = 317
-        this.width = 120
-        this.height = 120
-        this.x = 0
-        this.y = CANVAS_HEIGHT-this.width
-    }
-
-    draw(){
-      ctx.drawImage(this.image,0,0,this.spriteWidth,this.spriteHeight,this.x,this.y,this.width,this.height)
-    }
-}
-
-
-class Bullet {
-  constructor(x, y) {
-    this.width = 20;
-    this.height = 20;
-    this.speed = 1;
-    this.direction = "up";
-    this.color = "fff";
-    this.speed = 5;
-    this.x = x;
-    this.y = y;
-  }
-
-  update(idx) {
-    this.y -= 1 * this.speed* game.gameSpeed;
-    // remove the bullet if it passes the canvas
-    if (this.y < 0) bullets.splice(idx, 1);
-  }
-
-  draw() {
-    ctx.fillStyle = "#" + this.color;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-  }
-}
-
-class Star {
-  constructor() {
-    this.x = Math.random() * CANVAS_WIDTH;
-    this.y = Math.random() * CANVAS_HEIGHT;
-    this.width = this.height = Math.random() * 5;
-    this.opacity = Math.random() * (1 - 0.5) + 0.5;
-  }
-
-  draw() {
-    ctx.fillStyle = `rgba(255,255,255,${this.opacity})`;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-  }
-}
-
-
-class Enemy{
-    constructor(moveType="zig-zag",x=null,y=null){
-        const img= new Image()
-        img.src = "./assets/pics/enemy.png"
-        this.image = img
-        this.spriteWidth = 431
-        this.spriteHeight = 431
-        this.width = this.height = 120
-        if(x===null) this.x = Math.random() * CANVAS_WIDTH;
-        else this.x = x;
-        if (y === null) this.y = -this.height;
-        else this.y = y;
-        this.horizontalSpeed = 4
-        this.downSpeed = 1
-        this.counter = 0
-        this.angle = 2;
-        this.movementType = moveType
-    }
-
-    update(idx){
-        if(game.gameSpeed==0) return 
-        if(this.movementType === 'zig-zag'){
-            // movement - 1 : zigzag
-            this.x+=1*this.horizontalSpeed
-            if(this.x+this.width>=CANVAS_WIDTH || this.x<0){
-                this.horizontalSpeed*=-1
-            }
-            this.y+=1*this.downSpeed
-        }
-        else if(this.movementType ==='sine-wave'){
-            //movement - 2 : sin wave
-            this.x += 5 * Math.sin((this.angle * Math.PI) / 90);
-            this.angle += 1;
-            this.y += 1 * this.downSpeed;
-        }
-
-        //if enemy goes out of canvas remove it
-        if(this.x>CANVAS_WIDTH || this.x+this.width<0){
-          enemies.splice(idx,1)
-        }
-
-        // check for game-over after very update
-        this.#isGameOver()
-
-    }
-
-    #isGameOver(){
-        // check if the enemy touches the canvas border in downside
-        if(this.y+this.height>CANVAS_HEIGHT){
-          game.doGameOver()
-        }
-    }
-
-    draw(){
-        ctx.drawImage(this.image,0,0,this.spriteWidth,this.spriteHeight,this.x,this.y,this.width,this.height)
-    }
-}
-
-class Explosion {
-  constructor(x, y) {
-    this.spriteWidth = 200;
-    this.spriteHeight = 179;
-    this.width = this.spriteWidth * 0.6;
-    this.height = this.spriteHeight * 0.6;
-    this.x = x - this.width / 2;
-    this.y = y - this.height / 2;
-    this.frame = 0;
-    this.slower = 0;
-    this.image = new Image();
-    this.image.src = "./assets/pics/boom.png";
-    this.sound = new Audio()
-    this.sound.src = "./assets/sounds/sfx/explosion.mp3"
-  }
-
-  update(idx) {
-    if(game.isSfxOn && this.frame === 0){
-        this.sound.play()
-      }
-      
-    this.slower++;
-    if (this.slower % 5 == 0) {
-      if (this.frame < 5) this.frame++;
-      else explosions.splice(idx,1)
-    }
-  }
-
-  draw() {
-    ctx.drawImage(
-      this.image,
-      this.frame * this.spriteWidth,
-      0,
-      this.spriteWidth,
-      this.spriteHeight,
-      this.x,
-      this.y,
-      this.width,
-      this.height
-    );
-  }
-}
 
 function enemyWaveController(){
 
@@ -221,7 +83,7 @@ function enemyWaveController(){
         },2000*i)
     }
   }
-  
+
   
   function enemyWave2(n = 5, movementType) {
     // add enemies after 2 second time gap at random postions in canvas
@@ -239,7 +101,7 @@ function enemyWaveController(){
   enemyWave1()
   setInterval(()=>{
     if(game.gameSpeed!==0){
-      let numberOfEnemies = parseInt(Math.random()*2+4)
+      let numberOfEnemies = parseInt(Math.random()*2)
       let whichWave =Math.random()
       let whichMovement = Math.random()
       if(whichWave>0.5){
@@ -251,15 +113,9 @@ function enemyWaveController(){
         else enemyWave2(numberOfEnemies,"zig-zag");
       }
     }
-  },10000)
+  },10000*game.enemyWaveInterval)
 }
 
-let heroShip = new SpaceShip();
-const stars = [];
-const bullets = [];
-const enemies = [];
-const explosions = [];
-//enemyWave1(1);
 
 for (let i = 0; i < 70; i++) {
   stars.push(new Star());
@@ -317,8 +173,14 @@ function animate(){
 window.addEventListener("keydown", (e) => {
   // add bullets
   if (e.key === " ") {
-    let x = heroShip.x + heroShip.width/2 - 10; // bulletwidth/2
-    bullets.push(new Bullet(x, heroShip.y));
+    heroShip.fireBullets()
+  }
+});
+
+window.addEventListener("keyup", (e) => {
+  // add bullets
+  if (e.key === " ") {
+    heroShip.fireBullets('single press')
   }
 });
 
@@ -349,6 +211,9 @@ resumeGameBtn.addEventListener('click',()=>{
 
 startGameBtn.addEventListener('click',()=>{
   game.startNewGame()
+  // don't change intial difficulty until start new game is called
+  initialDifficulty = game.difficulty;
+  setResumeGameBtnVisibility();
 })
 
 window.addEventListener('keydown',(e)=>{
@@ -378,3 +243,55 @@ musicSfxToggle[1].addEventListener('click',()=>{
     musicSfxToggle[1].dataset.active = "true";
   }
 })
+
+menuLvlBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    let lvl = btn.dataset.value;
+    game.difficulty = lvl
+    localStorage.setItem('game-level',lvl)
+    mainMenuChooseLvlBtn.innerText = "Choose Level : "+
+      lvl["0"].toUpperCase() + lvl.substring(1);
+    subMenuBackBtn[0].click()
+
+    changeGameDifficultyParameters()
+    setResumeGameBtnVisibility()
+  })
+})
+
+function changeGameDifficultyParameters(){
+  // heroship.firingSpeed = 5+2*game.firingSpeed;
+  //enemy.downSpeed = 1+game.downSpeed;
+  // enemyNumber = Math.random()*2+game.enemyNumber
+  // wave is sent every 10 seconds
+  // enemywave interval = 10000*game.enemyWaveInterval
+  if (game.difficulty === "easy") {
+    game.firingSpeed = 2;
+    game.enemyNumber = 5;
+    game.enemyDownSpeed = 0;
+    game.enemyWaveInterval=1;
+  } else if (game.difficulty === "medium") {
+    game.firingSpeed = 2;
+    game.enemyNumber = 7;
+    game.enemyDownSpeed = .5;
+    game.enemyWaveInterval = 0.7;
+  } else if (game.difficulty === "hard") {
+    game.firingSpeed = 5;
+    game.enemyNumber = 9;
+    game.enemyDownSpeed = 1.5;
+    game.enemyWaveInterval = 0.3;
+  } else if (game.difficulty === "impossible") {
+    game.firingSpeed = 7;
+    game.enemyNumber = 11;
+    game.enemyDownSpeed = 3;
+    game.enemyWaveInterval = 0.1;
+  }
+}
+
+function setResumeGameBtnVisibility() {
+  if (initialDifficulty == null || initialDifficulty !== game.difficulty) {
+    resumeGameBtn.dataset.status = "hide";
+    game.doGameOver()
+  } else {
+    resumeGameBtn.dataset.status = "show";
+  }
+}

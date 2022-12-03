@@ -6,8 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Space shooter</title>
     <link rel="stylesheet" href="style.css">    
-    <script src="index.js" defer></script>
+    <script src="./classes/star.js" defer></script>
+    <script src="./classes/spaceship.js" defer></script>
+    <script src="./classes/enemy.js" defer></script>
+    <script src="./classes/bullet.js" defer></script>
+    <script src="./classes/explosion.js" defer></script>
     <script src="game-menu.js" defer></script>
+    <script src="index.js" defer></script>
 </head>
 <body>
     <canvas id="space-bg" width='1800px' height='900px'></canvas>
@@ -16,8 +21,8 @@
             <div class="menu-main" data-status="active">
                 <p class="menu-cont-heading">Menu</p>
                 <button id="start-game-btn">Start New Game</button>
-                <button id="resume-game-btn">Resume Game</button>
-                <button id="choose-level-btn">Choose Level</button>
+                <button id="resume-game-btn" data-status="hide">Resume Game</button>
+                <button id="choose-level-btn">Choose Level : </button>
                 <button id="see-highscore-btn">See Highscore</button>
                 <div id="menu-music-sfx">
                     <button data-active="true">Music</button>
@@ -26,10 +31,10 @@
             </div>
             <div class="menu-level" data-status="inactive">
                 <p class="menu-cont-heading">Choose Level</p>
-                <button>Easy</button>
-                <button>Medium</button>
-                <button>Hard</button>
-                <button>Impossible</button>
+                <button id="menu-level-btn" data-value="easy">Easy</button>
+                <button id="menu-level-btn" data-value="medium">Medium</button>
+                <button id="menu-level-btn" data-value="hard">Hard</button>
+                <button id="menu-level-btn" data-value="impossible">Impossible</button>
                 <button id="sub-menu-back-btn">&#8678; Back</button>
             </div>
             <div class="menu-highscore" data-status="inactive">

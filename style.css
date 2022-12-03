@@ -103,3 +103,11 @@ p,span{
 #menu-music-sfx>button[data-active=true]{
     text-decoration: none;
 }
+
+#resume-game-btn[data-status="show"]{
+    display:block
+}
+
+#resume-game-btn[data-status="hide"]{
+    display:none
+}
