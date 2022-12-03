@@ -12,11 +12,17 @@ const CANVAS_WIDTH = canvas.width
 const CANVAS_HEIGHT = canvas.height
 
 
+if(localStorage.getItem('game-level')!=null){
 
 mainMenuChooseLvlBtn.innerText =
  ("Choose Level : " +
     localStorage.getItem("game-level")[0].toUpperCase() +
-    localStorage.getItem("game-level").substring(1) )|| "Easy";
+    localStorage.getItem("game-level").substring(1) );
+}
+else{
+  localStorage.setItem('game-level','easy')
+  mainMenuChooseLvlBtn.innerText="Choose Level : Easy";
+}
 
 class Game{
   constructor(){
