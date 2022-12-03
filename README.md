@@ -11,4 +11,5 @@ Web Link : https://space-shooter-101.netlify.app/
 - press 'Esc' to open up the 'Game Menu'
 	- press 'Start new Game' to start new game
 	- press 'Resume Game' to resume the currently paused game
+	- press 'Choose Level' to choose the difficulty level
 
