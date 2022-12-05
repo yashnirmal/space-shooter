@@ -1,7 +1,7 @@
 # space-shooter
 It is a game made in vanillajs.
 
-It is still in the process of making
+It is still in the process of making altough the frontend is complete and anyone can play it and backend is still not done
 
 Web Link : https://space-shooter-101.netlify.app/
 
@@ -12,4 +12,5 @@ Web Link : https://space-shooter-101.netlify.app/
 	- press 'Start new Game' to start new game
 	- press 'Resume Game' to resume the currently paused game
 	- press 'Choose Level' to choose the difficulty level
+	- press 'See Highscore' to see the highscore of player
 
