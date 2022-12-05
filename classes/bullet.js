@@ -1,7 +1,7 @@
 class Bullet {
   constructor(x, y) {
     this.width = 20;
-    this.height = 20;
+    this.height = 30;
     this.speed = 1;
     this.direction = "up";
     this.color = "fff";
@@ -17,7 +17,12 @@ class Bullet {
   }
 
   draw() {
-    ctx.fillStyle = "#" + this.color;
+    // ctx.fillStyle = "#" + this.color;
+    let gradient = ctx.createLinearGradient(this.x,this.y,this.x,this.y+this.width)
+    gradient.addColorStop(0,"#fff")
+    gradient.addColorStop(0.6, "rgba(255,255,255,0.6)");
+    gradient.addColorStop(1,"rgba(255,255,255,0.2)")
+    ctx.fillStyle = gradient
     ctx.fillRect(this.x, this.y, this.width, this.height);
   }
 }

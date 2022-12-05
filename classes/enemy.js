@@ -10,7 +10,7 @@ class Enemy {
     else this.x = x;
     if (y === null) this.y = -this.height;
     else this.y = y;
-    this.horizontalSpeed = 4;
+    this.horizontalSpeed = 4*((Math.random>0.5)?-1:1);
     this.downSpeed = 1+game.enemyDownSpeed;
     this.counter = 0;
     this.angle = 2;

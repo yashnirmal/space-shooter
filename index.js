@@ -4,6 +4,7 @@ const resumeGameBtn = document.querySelector('#resume-game-btn')
 const musicSfxToggle = document.querySelectorAll("#menu-music-sfx>button");
 const menuLvlBtns = document.querySelectorAll('#menu-level-btn');
 const mainMenuChooseLvlBtn = document.querySelector('#choose-level-btn');
+const gameOverAndScoreDiv = document.querySelector('.game-over-score-div');
 const canvas = document.querySelector('#space-bg');
 const ctx = canvas.getContext('2d');
 let initialDifficulty = null;
@@ -37,14 +38,21 @@ class Game{
     this.enemyNumber = 5;
     this.enemyDownSpeed = 0; //enemy.downSpeed = 1+game.downSpeed;
     this.enemyWaveInterval = 1;
+    this.score = 0
   }
 
   pauseGame(){
+    this.saveScore();
+    gameOverAndScoreDiv.dataset.status = 'show'
+    gameOverAndScoreDiv.children[0].innerText = "Game Paused";
+    gameOverAndScoreDiv.children[1].innerText = "Score : " + this.score;
     this.gameSpeed = 0
     gameMenu.style.display = 'flex'
   }
 
   resumeGame(){
+    gameOverAndScoreDiv.dataset.status = 'hide'
+    this.saveScore()
     game.gameSpeed = 1;
     game.gameOver = false;
     gameMenu.style.display = "none";
@@ -52,6 +60,11 @@ class Game{
   }
 
   doGameOver(){
+    gameOverAndScoreDiv.dataset.status = 'show'
+    gameOverAndScoreDiv.children[0].innerText = "Game Over!!";
+    gameOverAndScoreDiv.children[1].innerText = "Score : " + this.score;
+    this.saveScore()
+    this.score=0
     this.gameOver = true
     this.gameSpeed = 0
     gameMenu.style.display = 'flex'
@@ -63,10 +76,28 @@ class Game{
 
   startNewGame(){
     this.doGameOver()
-    // changeGameDifficultyParameters();
     enemyWaveController()
     heroShip = new SpaceShip()
     this.resumeGame();
+  }
+
+  saveScore(){
+    let gameScore;
+    if(localStorage.getItem('game-score')==null){
+      gameScore = {
+        'easy':0,
+        'medium':0,
+        'hard':0,
+        'impossible':0,
+      }
+    }
+    else{
+      gameScore=JSON.parse(localStorage.getItem('game-score'))
+    }
+    if (gameScore[initialDifficulty]<this.score){
+      gameScore[initialDifficulty]=this.score;
+    } 
+    localStorage.setItem('game-score',JSON.stringify(gameScore))
   }
 }
 
@@ -123,7 +154,7 @@ function enemyWaveController(){
 }
 
 
-for (let i = 0; i < 70; i++) {
+for (let i = 0; i < 100; i++) {
   stars.push(new Star());
 }
 
@@ -131,8 +162,6 @@ for (let i = 0; i < 70; i++) {
 stars.forEach((s) => {
   s.draw();
 });
-
-
 
 
 function animate(){
@@ -166,6 +195,11 @@ function animate(){
     exp.update(idx);
     exp.draw();
   });
+
+  //animate game score
+  ctx.fillStyle = '#fff'
+  ctx.font = "bold 30px arial"
+  ctx.fillText("Score : "+game.score,15,30,CANVAS_WIDTH/10)
 
   if(game.gameSpeed==1)
   requestAnimationFrame(animate);
@@ -204,6 +238,7 @@ function checkCollision() {
                 (b.x>e.x && (b.x+b.width)<(e.x+e.width))
             ) {
                 explosions.push(new Explosion(e.x+e.width/2,e.y+e.height/2))
+                game.score+=1
                 enemies.splice(e_idx, 1);
                 bullets.splice(b_idx,1)
             }
@@ -272,24 +307,24 @@ function changeGameDifficultyParameters(){
   // enemywave interval = 10000*game.enemyWaveInterval
   if (game.difficulty === "easy") {
     game.firingSpeed = 2;
-    game.enemyNumber = 5;
-    game.enemyDownSpeed = 0;
-    game.enemyWaveInterval=1;
-  } else if (game.difficulty === "medium") {
-    game.firingSpeed = 2;
     game.enemyNumber = 7;
-    game.enemyDownSpeed = .5;
+    game.enemyDownSpeed = 0.5;
     game.enemyWaveInterval = 0.7;
-  } else if (game.difficulty === "hard") {
+  } else if (game.difficulty === "medium") {
     game.firingSpeed = 5;
     game.enemyNumber = 9;
     game.enemyDownSpeed = 1.5;
     game.enemyWaveInterval = 0.3;
-  } else if (game.difficulty === "impossible") {
+  } else if (game.difficulty === "hard") {
     game.firingSpeed = 7;
     game.enemyNumber = 11;
     game.enemyDownSpeed = 3;
-    game.enemyWaveInterval = 0.1;
+    game.enemyWaveInterval = 0.2;
+  } else if (game.difficulty === "impossible") {
+    game.firingSpeed = 5;
+    game.enemyNumber = 15;
+    game.enemyDownSpeed = 4;
+    game.enemyWaveInterval = 0.05;
   }
 }
 

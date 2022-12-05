@@ -111,3 +111,13 @@ p,span{
 #resume-game-btn[data-status="hide"]{
     display:none
 }
+
+.game-over-score-div[data-status="show"]{
+    text-align: center;
+    font-size: 1.6rem;
+    display: block;
+}
+
+.game-over-score-div[data-status="hide"]{
+    display: none;
+}
