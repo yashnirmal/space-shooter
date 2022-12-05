@@ -1,7 +1,7 @@
 {
   "name": "space-shooter-backend",
   "version": "1.0.0",
-  "description": "backend for space shooter game",
+  "description": "backend for space shooter",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
