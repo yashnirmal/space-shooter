@@ -71,6 +71,7 @@ class Game{
     bullets.splice(0,bullets.length)
     enemies.splice(0,enemies.length)
     explosions.splice(0,explosions.length)
+    asteroids.splice(0,asteroids.length)
     heroShip = null
   }
 
@@ -107,6 +108,7 @@ const stars = [];
 const bullets = [];
 const enemies = [];
 const explosions = [];
+const asteroids = [];
 setResumeGameBtnVisibility();
 
 
@@ -151,6 +153,13 @@ function enemyWaveController(){
       }
     }
   },10000*game.enemyWaveInterval)
+
+  
+  setInterval(() => {
+    if(game.gameSpeed!==0){
+      asteroids.push(new Asteroid());
+    }
+  }, 9000);
 }
 
 
@@ -195,6 +204,12 @@ function animate(){
     exp.update(idx);
     exp.draw();
   });
+
+  //animate asteroids
+  asteroids.forEach(ast=>{
+    ast.update()
+    ast.draw()
+  })
 
   //animate game score
   ctx.fillStyle = '#fff'
