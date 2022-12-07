@@ -15,7 +15,7 @@ mongoose.connect(process.env.MONGO_CONN_URL)
 })
 
 //middlewares
-
+app.use(express.json())
 
 // routes
 app.get("/",(req,res)=>{
@@ -23,7 +23,6 @@ app.get("/",(req,res)=>{
 })
 
 app.post("/player",(req,res)=>{
-    console.log(req.query)
     Player.create(req.body,(err,data)=>{
         if(!err){
             res.status(200).send({status:'ok',msg:'user created'})
@@ -34,10 +33,9 @@ app.post("/player",(req,res)=>{
     })
 })
 
-app.get('/player',(req,res)=>{
-    console.log(req.body)
-    console.log(req.query)
-    Player.findOne(req.body,(err,data)=>{
+app.get('/player/:id',(req,res)=>{
+    let _id = req.params.id
+    Player.findById(_id,(err,data)=>{
         if(!err){
             if(!data){
                 res.status(500).send({status:'error',msg:'user not found'})
@@ -52,9 +50,33 @@ app.get('/player',(req,res)=>{
     })
 })
 
-// app.get('/score',(req,res)=>{
+app.post('/score/:id',(req,res)=>{
+    let _id = req.params.id
+    console.log(req.body,req.params)
+    Player.updateOne({_id:_id},{$set:{score:req.body}},(err,data)=>{
+        if (!err) {
+          res.status(200).send({ status: "ok",msg:"updated scsore" });
+        } else {
+          console.log(err);
+          res.status(500).send({ status: "error", msg: "invalid playerid" });
+        }
+    })
+})
 
-// })
+app.get('/usernames/:username',(req,res)=>{
+    console.log(req.params)
+    Player.find({username:req.params.username},(err,data)=>{
+        console.log(err,data)
+        if(data.length!=0){
+            // entered username is not unique
+            res.status(500).send({status:'error',msg:'username already exist'})
+        }
+        else{
+            // unique username
+            res.status(200).send({status:'ok',msg:'unique username'})
+        }
+    })
+})
 
 app.listen(PORT,()=>{
     console.log("Listening on PORT :",PORT)
