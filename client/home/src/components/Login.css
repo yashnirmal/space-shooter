@@ -1,0 +1,15 @@
+.login-cont{
+    display: flex;
+    justify-content: center;
+}
+
+.login{
+    width: 90%;
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 50px;
+}

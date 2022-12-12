@@ -1,0 +1,32 @@
+.scoreboard{
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.level-choose button{
+    border-radius: 10px;
+}
+
+
+.level-choose button[data-status="un-checked"]{
+    color: white;
+    background-color: var(--black);
+}
+
+.level-choose button[data-status="checked"]{
+    background-color: white;
+}
+
+.players-list{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.players-list>p{
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+}

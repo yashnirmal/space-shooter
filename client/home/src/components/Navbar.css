@@ -1,0 +1,25 @@
+.navbar{
+    width: 100vw;
+    height: 100px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.navbar>*{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+.navbar button{
+    font-size: inherit;
+    padding: 10px;
+}
+
+.logo{
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-style: italic;
+}

@@ -1,0 +1,19 @@
+.First{
+    width:100vw;
+    height: fit-content;
+    background-color: #171717;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 50px 0;
+}
+
+.First>div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.First>div:nth-child(1){
+    font-size: 5rem;
+}
