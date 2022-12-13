@@ -9,7 +9,16 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: left;
     gap: 20px;
     margin-top: 50px;
+}
+
+.login-signup-header{
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.login-signup-header:nth-child(2){
+    margin-bottom:20px;
 }

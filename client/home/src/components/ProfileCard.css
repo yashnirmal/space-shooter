@@ -1,0 +1,43 @@
+.profile-card-cont{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width:100vw;
+    height:100vh;
+    background-color: rgba(0,0,0,0.8);
+    backdrop-filter: blur(7px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-card{
+    width: 90%;
+    max-width: 500px;
+    height:fit-content;
+    background-color: var(--black);
+    border-radius: 50px;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    font-weight: bold;
+}
+
+.profile-card>p{
+    font-size: 1.5rem;
+}
+
+.stat-indi{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.stat-indi>span{
+    font-size: 1.3rem;
+}
+
+.logout-btn{
+    color:red;
+    cursor: pointer;
+}

@@ -20,6 +20,8 @@ body {
 
   color: white;
   background-color: var(--black);
+
+  overflow-x: hidden;
 }
 
 code {

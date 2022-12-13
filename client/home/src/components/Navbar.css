@@ -23,3 +23,8 @@
     font-weight: bold;
     font-style: italic;
 }
+
+.nav_profile{
+    text-decoration: underline;
+    cursor:pointer;
+}
