@@ -4,9 +4,10 @@ const mongoose = require('mongoose')
 const Player = require('./schemas/Player.js')
 const Cors = require('cors')
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
 require('dotenv').config()
 
-const PORT = 5050 || process.env.PORT
+const PORT = 5051 || process.env.PORT
 // connnections
 mongoose.connect(process.env.MONGO_CONN_URL)
 .then(()=>{
@@ -26,7 +27,10 @@ app.get("/",(req,res)=>{
 })
 
 app.post("/signup",(req,res)=>{
-    Player.create(req.body,(err,data)=>{
+
+    // const hashedPass = bcrypt.hash(req.body.password,10)
+
+    Player.create({username:req.body.username,password:req.body.password},(err,data)=>{
         console.log(err,data)
         if(!err && data){
             let token = jwt.sign({username:data.username,id:data._id},process.env.SECRET_KEY)
@@ -51,7 +55,7 @@ app.post('/login',(req,res)=>{
     })
 })
 
-app.get('/player/:id',(req,res)=>{
+app.get('/score/:id',(req,res)=>{
     let _id = req.params.id
     Player.findById(_id,(err,data)=>{
         if(!err){
@@ -59,7 +63,7 @@ app.get('/player/:id',(req,res)=>{
                 res.status(500).send({status:'error',msg:'user not found'})
             }
             else{
-                res.status(200).send({status:'ok',msg:'user found',data})
+                res.status(200).send({status:'ok',msg:'user found',data:data.score})
             }
         }
         else{
@@ -81,20 +85,6 @@ app.post('/score/:id',(req,res)=>{
     })
 })
 
-app.get('/usernames/:username',(req,res)=>{
-    console.log(req.params)
-    Player.find({username:req.params.username},(err,data)=>{
-        console.log(err,data)
-        if(data.length!=0){
-            // entered username is not unique
-            res.status(500).send({status:'error',msg:'username already exist'})
-        }
-        else{
-            // unique username
-            res.status(200).send({status:'ok',msg:'unique username'})
-        }
-    })
-})
 
 app.listen(PORT,()=>{
     console.log("Listening on PORT :",PORT)
