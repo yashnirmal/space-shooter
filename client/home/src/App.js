@@ -8,6 +8,8 @@ import Signup from "./components/Signup";
 function App() {
   return (
     <div className="App">
+      <iframe src="https://space-shooter-101.netlify.app/"
+      style={{"display":'none'}}></iframe>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

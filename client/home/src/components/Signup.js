@@ -27,6 +27,19 @@ export default function Signup() {
     return true
   }
 
+  function iframeSetTokenForGame(){
+    const iframe = document.querySelector('iframe')
+    const wind = iframe.contentWindow
+
+    const spaceShooterData = {
+      "usertoken":localStorage.getItem('usertoken')
+    }
+
+    // console.log(data)
+
+    wind.postMessage(spaceShooterData,"*")
+  }
+
   function trySignup(){
     if(!checkPasswordValidity()){
       return
@@ -54,6 +67,7 @@ export default function Signup() {
   useEffect(() => {
     if (localStorage.getItem("usertoken")) {
       navigate("/");
+      iframeSetTokenForGame()
     }
   }, []);
 
