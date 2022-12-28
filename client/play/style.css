@@ -121,3 +121,31 @@ p,span{
 .game-over-score-div[data-status="hide"]{
     display: none;
 }
+
+.skin-cont{
+    width: fit-content;
+    height: fit-content;
+    max-height: 400px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 20px;
+    gap: 30px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+}
+
+.skin-card>img{
+    width: 200px;
+    aspect-ratio: 1;
+}
+
+.skin-card>button:[data-chosen='yes']{
+    background-color: white;
+    color: black;
+}
+
+
+.skin-card>button:[data-chosen='no']{
+
+}

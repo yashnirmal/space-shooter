@@ -1,0 +1,19 @@
+.skin-cont{
+	display: flex;
+	flex-wrap: wrap;
+	gap:  50px;
+	margin-top: 50px;
+}
+
+.skin-card{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 20px;
+}
+
+.skin-card>img{
+	width: 200px;
+	aspect-ratio:  1;
+}
