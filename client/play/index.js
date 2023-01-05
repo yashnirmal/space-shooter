@@ -31,7 +31,6 @@ class Game{
     this.gameSpeed = 0;
     this.music = new Audio("./assets/sounds/music/music1.mp3");
     this.music.loop = true;
-    this.music.play();
     this.isSfxOn = true;
     this.difficulty = localStorage.getItem("game-level") || "easy";
     this.firingSpeed = 1; // heroship.firingSpeed = 5+2*game.firingSpeed;
@@ -258,6 +257,15 @@ function checkCollision() {
                 bullets.splice(b_idx,1)
             }
         })
+    })
+
+    // checking collision between asterois and heroship
+    asteroids.forEach(as=>{
+      if((as.y+as.height>heroShip.y) && ((as.x+as.width>heroShip.x)&&(as.x+as.width<heroShip.x+heroShip.width) || (as.x>heroShip.x)&&(as.x<heroShip.x+heroShip.width))){
+        explosions.push(new Explosion(heroShip.x+heroShip.width/2,heroShip.y+heroShip.height/2,true))
+        game.pauseGame()
+        heroShip=null
+      }
     })
 }
 

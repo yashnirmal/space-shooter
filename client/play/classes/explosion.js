@@ -1,5 +1,5 @@
 class Explosion {
-  constructor(x, y) {
+  constructor(x, y,gmOver=false) {
     this.spriteWidth = 200;
     this.spriteHeight = 179;
     this.width = this.spriteWidth * 0.6;
@@ -12,6 +12,7 @@ class Explosion {
     this.image.src = "./assets/pics/boom.png";
     this.sound = new Audio();
     this.sound.src = "./assets/sounds/sfx/explosion.mp3";
+    this.doGameOverWithThisExp = gmOver;
   }
 
   update(idx) {
@@ -22,7 +23,12 @@ class Explosion {
     this.slower++;
     if (this.slower % 5 == 0) {
       if (this.frame < 5) this.frame++;
-      else explosions.splice(idx, 1);
+      else{
+        if(this.doGameOverWithThisExp){
+          game.doGameOver()
+        }
+        explosions.splice(idx, 1);
+      } 
     }
   }
 
