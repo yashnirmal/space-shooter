@@ -17,3 +17,14 @@
 	width: 200px;
 	aspect-ratio:  1;
 }
+
+.skin-price{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 20px;
+}
+
+.skin-price>span{
+	font-weight: bold;
+}

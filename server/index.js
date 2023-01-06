@@ -2,12 +2,13 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const Player = require('./schemas/Player.js')
+const Ship = require('./schemas/Ship.js')
 const Cors = require('cors')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 require('dotenv').config()
 
-const PORT = 5051 || process.env.PORT
+const PORT = 5050 || process.env.PORT
 // connnections
 mongoose.connect(process.env.MONGO_CONN_URL)
 .then(()=>{
@@ -81,6 +82,17 @@ app.post('/score/:id',(req,res)=>{
         } else {
           console.log(err);
           res.status(500).send({ status: "error", msg: "invalid playerid" });
+        }
+    })
+})
+
+app.get('/ships',(req,res)=>{
+    Ship.find({},(err,data)=>{
+        if(!err && data){
+            res.status(200).send({status:'ok',msg:'all ships fetched',data:data})
+        }
+        else{
+            res.status(500).send({status:'error',msg:"something went wrong"})
         }
     })
 })

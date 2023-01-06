@@ -5,7 +5,10 @@ export default function SkinCard(props) {
   return (
     <div className="skin-card">
     	<img src={props.image} alt={"img"+props.idx} />
-    	<button>Unlock</button>
+      <div  className="skin-price">
+        <span>Rs. {props.price}</span>
+      	<button>Unlock</button>
+      </div>
     </div>
   );
 }

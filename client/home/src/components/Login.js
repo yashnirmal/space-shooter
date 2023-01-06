@@ -21,7 +21,7 @@ export default function Login() {
       body:JSON.stringify({username,password})
     }
 
-    fetch("http://localhost:5051/login",reqOptions)
+    fetch("http://localhost:5050/login",reqOptions)
     .then(res=>res.json())
     .then(data=>{
       console.log(data)
