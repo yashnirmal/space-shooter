@@ -5,11 +5,16 @@ import Skins from "./components/Skins";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 
+
+
 function App() {
+
+  // function setUsertTokenInGame(){
+    
+  // }
+
   return (
     <div className="App">
-      <iframe src="https://space-shooter-101.netlify.app/"
-      style={{"display":'none'}}></iframe>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

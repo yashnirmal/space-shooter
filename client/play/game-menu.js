@@ -6,6 +6,30 @@ const highScoreBasedOnLevel = document.querySelectorAll(".highscore-score-div");
 const seeSkinsBtn = document.querySelector("#see-skins-btn")
 
 
+//
+var createHost = require('cross-domain-storage/host')
+var createGuest = require('cross-domain-storage/guest')
+var storageHost = createHost([
+  {
+    origin:'http://localhost:3000/',
+    allowedMethods:['get','set','remove','clear']
+  },
+  {
+    origin:'https://space-shooter-101.netlify.app/',
+    allowedMethods:['get','clear','set']
+  }
+])
+
+var bazStorage = createGuest("http://localhost:3000" || "https://space-shooter-home.netlify.app")
+window.addEventListener('load',()=>{
+    bazStorage.get('usertoken',(err,val)=>{
+        if(err){
+            console.log(err)
+        }else{
+            console.log(val)
+        }
+    })
+})
 
 chooseLvlBtn.addEventListener('click',()=>{
     subMenus.forEach(sb=>{
