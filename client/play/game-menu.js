@@ -7,8 +7,10 @@ const seeSkinsBtn = document.querySelector("#see-skins-btn")
 
 
 //
-var createHost = require('cross-domain-storage/host')
-var createGuest = require('cross-domain-storage/guest')
+// var createHost = require('cross-domain-storage/host')
+// var createGuest = require('cross-domain-storage/guest')
+import createHost from 'cross-domain-storage/host';
+import createGuest from 'cross-domain-storage/guest';
 var storageHost = createHost([
   {
     origin:'http://localhost:3000/',
