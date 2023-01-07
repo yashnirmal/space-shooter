@@ -42,7 +42,7 @@ export default function Login() {
       "usertoken":localStorage.getItem('usertoken')
     }
 
-    wind.postMessage(spaceShooterData,"*")
+    wind.postMessage(spaceShooterData,"https://space-shooter-101.netlify.app")
   }
 
   useEffect(()=>{

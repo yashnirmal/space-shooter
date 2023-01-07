@@ -359,3 +359,19 @@ function setResumeGameBtnVisibility() {
     resumeGameBtn.dataset.status = "show";
   }
 }
+
+
+// getting the usertoken id from main website
+window.addEventListener('message',(e)=>{
+    console.log(e.data)
+    if(e.origin!=="http://localhost:3000"){
+        return
+    }
+    const data = e.data
+    console.log(e.origin)
+    console.log(e.data)
+    if(data.usertoken!=="undefined"){
+        localStorage.setItem('usertoken',data.usertoken)
+        console.log(data.usertoken)
+    }
+},false)
