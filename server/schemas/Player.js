@@ -8,7 +8,8 @@ const player = mongoose.Schema({
         medium:{type:Number,default:0},
         hard:{type:Number,default:0},
         impossible:{type:Number,default:0}
-    }
+    },
+    ships:{type:[String],default:[]}
 }) 
 
 module.exports = mongoose.model('Player',player)
