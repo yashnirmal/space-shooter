@@ -3,7 +3,8 @@ It is a game made in vanillajs.
 
 It is still in the process of making altough the frontend is complete and anyone can play it and backend is still not done
 
-Web Link : https://space-shooter-home.netlify.app/
+Web Link : https://space-shooter-home.vercel.app/
+Game Link : https://space-shooter-play.vercel.app/
 
 ## HOW TO PLAY
 - Move your mouse to move the ship
