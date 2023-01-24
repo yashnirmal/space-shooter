@@ -13,7 +13,7 @@ export default function First() {
       <div>
         <img src={SpaceshipImg} alt="" srcset="" />
         <button
-          onClick={() => window.open("https://space-shooter-101.netlify.app/")}
+          onClick={() => window.open("https://space-shooter-play.vercel.app/")}
         >
           Play
         </button>
