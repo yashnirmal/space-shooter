@@ -7,10 +7,9 @@ export default function ProfileCard(props) {
   const [username,setUsername] = useState("username")
   const [score,setScore] = useState({});
 
-  function getUserStats(){
-    const decoded = jwt_decode(localStorage.getItem("usertoken"));
+  function getUserStats(id){
     
-    fetch(`http://localhost:5051/score/${decoded.id}`)
+    fetch(`http://localhost:5050/score/${id}`)
     .then(res=>res.json())
     .then(data=>{
       if(data.status==='ok'){
@@ -24,7 +23,7 @@ export default function ProfileCard(props) {
     if (token) {
       const decoded = jwt_decode(token);
       setUsername(decoded.username);
-      getUserStats()
+      getUserStats(decoded.id)
     }
   }, []);
 

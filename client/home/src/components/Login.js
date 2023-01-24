@@ -55,10 +55,10 @@ export default function Login() {
   return (
     <div className='login-cont'>
       <div className='login'>
-        <p className='login-signup-header'>Lets get back to the action</p>
+        <p className='login-signup-header'>Lets get you back to the action</p>
         <p className='login-signup-header'>Login</p>
         <input type="text" placeholder='Enter username' value={username} onChange={(e)=>setUsername(e.target.value)}/>
-        <input type="text" placeholder='Password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
+        <input type="password" placeholder='Password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
         <button style={{width:"100%"}} onClick={tryLogin}>Login</button>
         <LoginSignupError errorMsg={errorMsg}/>
       </div>

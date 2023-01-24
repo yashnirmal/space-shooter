@@ -27,18 +27,6 @@ export default function Signup() {
     return true
   }
 
-  function iframeSetTokenForGame(){
-    const iframe = document.querySelector('iframe')
-    const wind = iframe.contentWindow
-
-    const spaceShooterData = {
-      "usertoken":localStorage.getItem('usertoken')
-    }
-
-    // console.log(data)
-
-    wind.postMessage(spaceShooterData,"*")
-  }
 
   function trySignup(){
     if(!checkPasswordValidity()){
@@ -59,15 +47,17 @@ export default function Signup() {
     fetch("http://localhost:5050/signup", reqOptions)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setErrorMsg(data.msg);
+        if(data.status='ok'){
+          localStorage.setItem('usertoken',data.user);
+          navigate("/")
+        }
       });
   }
 
   useEffect(() => {
     if (localStorage.getItem("usertoken")) {
       navigate("/");
-      iframeSetTokenForGame()
     }
   }, []);
 
@@ -77,8 +67,8 @@ export default function Signup() {
         <p className='login-signup-header'>Lets get you a new account</p>
         <p className='login-signup-header'>SignUp</p>
         <input type="text" placeholder="Enter username" value={username} onChange={(e)=>setUsername(e.target.value)} />
-        <input type="text" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)} />
-        <input type="text" placeholder='Confirm password' value={confirmpass}  onChange={(e)=>setConfirmpass(e.target.value)}/>
+        <input type="password" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)} />
+        <input type="password" placeholder='Confirm password' value={confirmpass}  onChange={(e)=>setConfirmpass(e.target.value)}/>
         <button style={{ width: "100%" }} onClick={trySignup}>Signup</button>
         <LoginSignupError errorMsg={errorMsg} />
       </div>

@@ -5,7 +5,6 @@ export default function Skins() {
 
   const [skins,setSkins] = useState([])
 
-
   function fetchSkins(){
     fetch("http://localhost:5050/ships")
     .then((res)=>res.json())
@@ -30,7 +29,7 @@ export default function Skins() {
       {
         (skins.length)?
         skins.map((skin,idx)=>(
-          <SkinCard image={skin.file} price={skin.price} idx={idx} />
+          <SkinCard image={skin.file} price={skin.price} id={skin._id} name={skin.name} idx={idx} />
         )):'Loading...'
       }
     </div>
