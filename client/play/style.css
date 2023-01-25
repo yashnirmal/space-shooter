@@ -16,6 +16,11 @@ body{
     color: white;
 }
 
+a{
+    text-decoration: none;
+    color: white;
+}
+
 #space-bg{
     /* width: 100%;
     height: 100%; */
@@ -46,6 +51,19 @@ body{
     align-items: center;
     /* border: 2px solid white; */
     gap: 20px;
+}
+
+input{
+    width: 100%;
+    height: 50px;
+    background: transparent;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    border: 2px solid white;
+    padding-left: 15px;
+    color: white;
+    outline: none;
 }
 
 button{
@@ -148,4 +166,49 @@ p,span{
 
 .skin-card>button:[data-chosen='no']{
 
+}
+
+
+/*Login and Signup btns*/
+.hello-message{
+    font-size: 1.4rem;
+    margin-bottom: 50px;
+}
+
+.login-signup-btns{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;   
+}
+
+.login-signup-btns span{
+    cursor: pointer; 
+}
+
+.logout-btn-div{
+    text-align: center;
+}
+
+.logout-btn{
+    cursor: pointer;
+    color: red;
+    text-shadow: red;
+}
+
+div[data-loggedin="false"]{
+    display: none;
+}
+
+
+div[data-loggedin="true"]{
+    display: flex;
+}
+
+.menu-login>span{
+    margin-bottom: 30px;
+}
+
+.menu-login>button:{
+    margin-top:20px;
 }

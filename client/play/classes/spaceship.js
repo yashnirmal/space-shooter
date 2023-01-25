@@ -1,7 +1,7 @@
 class SpaceShip {
   constructor() {
     const img = new Image();
-    img.src = "./assets/pics/hero.png";
+    img.src = "assets/pics/hero.png";
     this.image = img;
     this.spriteWidth = 401;
     this.spriteHeight = 317;

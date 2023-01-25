@@ -5,21 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Space shooter</title>
-    <link rel="stylesheet" href="style.css">    
+    <link rel="stylesheet" href="./style.css">    
     <script src="./classes/star.js" defer></script>
     <script src="./classes/spaceship.js" defer></script>
     <script src="./classes/enemy.js" defer></script>
     <script src="./classes/bullet.js" defer></script>
     <script src="./classes/explosion.js" defer></script>
     <script src="./classes/asteroid.js" defer></script>
-    <script src="game-menu.js" defer></script>
-    <script src="index.js" defer></script>
+    <script src="./dist/output.js" defer></script>
+    <script src="./index.js" defer></script>
 </head>
 <body>
     <canvas id="space-bg" width='1800px' height='900px'></canvas>
     <div class="menu">
         <div class="menu-container">
             <div class="menu-main" data-status="active">
+                <div class="hello-message"  data-loggedin="false">
+                    <span>Hey <span>username</span>, lets get back to action</span>    
+                </div>
                 <div class="game-over-score-div" data-status="hide">
                     <p></p>
                     <p>Score : 0</p>
@@ -33,6 +36,15 @@
                 <div id="menu-music-sfx">
                     <button data-active="false">Music</button>
                     <button data-active="true">SFX</button>
+                </div>
+                <div style="width: 100%; margin-top: 50px;">
+                    <div class="login-signup-btns" data-loggedin="true">
+                        <span id="menu-login-btn">Log in</span>
+                        <span><a href="https://space-shooter-home.vercel.app/signup" target="_blank">Sign Up</a></span>
+                    </div>
+                    <div class="logout-btn-div" data-loggedin="false">
+                        <span class="logout-btn">Log out</span>
+                    </div>
                 </div>
             </div>
             <div class="menu-level" data-status="inactive">
@@ -67,6 +79,14 @@
                 <p class="menu-cont-heading">Skins</p>
                 <div class="skin-cont">
                 </div>
+                <button id="sub-menu-back-btn">&#8678; Back</button>
+            </div>
+            <div class="menu-login" data-status="inactive">
+                <span>Log in to your account to save your progress</span>
+                <input type="text" class="login-username" placeholder="Enter username">
+                <input type="password" class="login-pass" placeholder="Enter password">
+                <button class="login-btn">Log In</button>
+                <span class="login-err-msg"></span>
                 <button id="sub-menu-back-btn">&#8678; Back</button>
             </div>
         </div>

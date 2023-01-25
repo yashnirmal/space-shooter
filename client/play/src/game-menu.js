@@ -4,22 +4,38 @@ const subMenus = document.querySelectorAll('.menu-container>div');
 const subMenuBackBtn = document.querySelectorAll('#sub-menu-back-btn');
 const highScoreBasedOnLevel = document.querySelectorAll(".highscore-score-div");
 const seeSkinsBtn = document.querySelector("#see-skins-btn")
+const menuLoginBtn = document.querySelector("#menu-login-btn")
+const loginBtn = document.querySelector('.login-btn')
+const logoutBtn = document.querySelector('.logout-btn')
+import axios from 'axios'
+import jwt_decode from 'jwt-decode'
+// const axios = require('axios')
+// const jwt_decode = require('jwt-decode')
+
+function callForScore(id){
+    axios.get(`https://backend-space-shooter.vercel.app/score/${id}`)
+    .then(data=>localStorage.setItem('game-score',JSON.stringify(data.data.data)))
+}
 
 
-// getting the usertoken id from main website
-window.addEventListener('message',(e)=>{
-    console.log(e)
-    if(e.origin!=="https://space-shooter-101.netlify.app"){
+window.addEventListener('load',()=>{
+    //update the localstorage 
+    if(!localStorage.getItem('usertoken')){
         return
     }
-    const data = JSON.parse(e.data)
-    console.log(e.origin)
-    console.log(e.data)
-    if(data.usertoken!=="undefined"){
-        localStorage.setItem('usertoken',data.usertoken)
-        console.log(data.usertoken)
-    }
-},false)
+    const logRelatedElements = document.querySelectorAll('[data-loggedin]')
+    logRelatedElements.forEach(el=>{
+        if(el.dataset.loggedin==="true"){
+            el.dataset.loggedin="false"
+        }
+        else{
+            el.dataset.loggedin="true"
+        }
+    })
+    const decoded = jwt_decode(localStorage.getItem('usertoken'))
+    callForScore(decoded.id)
+    document.querySelector('.hello-message>span>span').innerText=decoded.username
+})
 
 
 chooseLvlBtn.addEventListener('click',()=>{
@@ -42,6 +58,21 @@ seeHighscoreBtn.addEventListener('click',()=>{
     highScoreBasedOnLevel[3].children[1].innerText = scoreObject["impossible"];
 })
 
+
+seeSkinsBtn.addEventListener('click', ()=>{
+    subMenus.forEach(sb=>{
+        sb.dataset.status='inactive'
+    })
+    subMenus[3].dataset.status = "active";
+})
+
+menuLoginBtn.addEventListener('click',()=>{
+    subMenus.forEach(sb=>{
+        sb.dataset.status='inactive'
+    })
+    subMenus[4].dataset.status = "active";
+})
+
 subMenuBackBtn.forEach(backBtn=>{
     backBtn.addEventListener("click", () => {
       subMenus.forEach((sb) => {
@@ -51,12 +82,6 @@ subMenuBackBtn.forEach(backBtn=>{
     });
 })
 
-seeSkinsBtn.addEventListener('click', ()=>{
-    subMenus.forEach(sb=>{
-        sb.dataset.status='inactive'
-    })
-    subMenus[3].dataset.status = "active";
-})
 
 //load game skins
 const skins = [
@@ -93,3 +118,47 @@ for(let i=0;i<skins.length;i++){
     div.appendChild(button)
     skinCont.appendChild(div)
 }
+
+loginBtn.addEventListener('click',()=>{
+    console.log("loggin in")
+    const errMsg = document.querySelector('.login-err-msg')
+    errMsg.innerText="getting details..."
+
+    axios.post('https://backend-space-shooter.vercel.app/login',{
+        username:document.querySelector('.login-username').value,
+        password:document.querySelector('.login-pass').value
+    })
+    .then(data=>{
+        console.log(data)
+        let result = data.data
+        if(result.status==='ok'){
+            errMsg.innerText=result.msg
+            localStorage.setItem('usertoken',result.user)
+            location.reload()
+        }
+        else{
+            errMsg.innerText = result.msg
+        }
+    })
+    .catch(err=>{
+        let result = err.response?.data
+        if(result?.status!=='ok'){
+            errMsg.innerText = result?.msg
+        }
+    })
+})
+
+logoutBtn.addEventListener('click',()=>{
+    console.log('logging out...')
+    localStorage.clear()
+    const logRelatedElements = document.querySelectorAll('[data-loggedin]')
+    logRelatedElements.forEach(el=>{
+        if(el.dataset.loggedin==="true"){
+            el.dataset.loggedin="false"
+        }
+        else{
+            el.dataset.loggedin="true"
+        }
+    })
+    location.reload()
+})
