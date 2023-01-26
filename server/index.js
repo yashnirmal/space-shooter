@@ -150,6 +150,18 @@ app.post('/score/:id',(req,res)=>{
     })
 })
 
+app.get('/playerships/:id',(req,res)=>{
+    const _id = req.params.id
+    Player.findOne({_id},(err,data)=>{
+        if(!err && data){
+            res.status(200).send({status:'ok',msg:'getting all ships',data:data.ships})
+        }
+        else{
+            res.status(500).send({status:'error',msg:'server error please try again later'})
+        }
+    })
+})
+
 app.get('/ships',(req,res)=>{
     Ship.find({},(err,data)=>{
         if(!err && data){

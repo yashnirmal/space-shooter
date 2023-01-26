@@ -29,26 +29,14 @@ export default function Login() {
       if(data.status==='ok'){
         localStorage.setItem('usertoken',data.user)
         navigate("/")
-        iframeSetTokenForGame()
       }
     })
   }
 
-  function iframeSetTokenForGame(){
-    const iframe = document.querySelector('iframe')
-    const wind = iframe.contentWindow
-
-    const spaceShooterData = {
-      "usertoken":localStorage.getItem('usertoken')
-    }
-
-    wind.postMessage(spaceShooterData,"*")
-  }
 
   useEffect(()=>{
     if(localStorage.getItem('usertoken')){
       navigate("/")
-      iframeSetTokenForGame()       
     }
   },[])
 
