@@ -21,7 +21,7 @@ export default function Login() {
       body:JSON.stringify({username,password})
     }
 
-    fetch("http://localhost:5050/login",reqOptions)
+    fetch(`${process.env.REACT_APP_BASE_URL}/login`,reqOptions)
     .then(res=>res.json())
     .then(data=>{
       console.log(data)

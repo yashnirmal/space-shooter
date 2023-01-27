@@ -9,7 +9,7 @@ export default function ProfileCard(props) {
 
   function getUserStats(id){
     
-    fetch(`http://localhost:5050/score/${id}`)
+    fetch(`${process.env.REACT_APP_BASE_URL}/${id}`)
     .then(res=>res.json())
     .then(data=>{
       if(data.status==='ok'){

@@ -126,7 +126,8 @@ app.get("/scoreboard/:id",(req,res)=>{
         let data = result.map((el)=>{
             return {
                 username:el.username,
-                score:el.score[type]            }
+                score:el.score[type]        
+            }
         })
         res.status(200).send({status:'ok',msg:'sorted data returned',data})
     })
@@ -150,10 +151,12 @@ app.post('/score/:id',(req,res)=>{
     })
 })
 
-app.get('/playerships/:id',(req,res)=>{
+
+app.get('/playerships/:id',async (req,res)=>{
     const _id = req.params.id
     Player.findOne({_id},(err,data)=>{
         if(!err && data){
+            console.log(data.ships)
             res.status(200).send({status:'ok',msg:'getting all ships',data:data.ships})
         }
         else{
@@ -169,6 +172,18 @@ app.get('/ships',(req,res)=>{
         }
         else{
             res.status(500).send({status:'error',msg:"something went wrong"})
+        }
+    })
+})
+
+app.get('/ship/:id',(req,res)=>{
+    const _id = req.params.id
+    Ship.findOne({_id},(err,data)=>{
+        if(!err && data){
+            res.status(200).send({status:'ok',msg:'got the ships data',data:data})
+        }
+        else{
+            res.status(500).send({status:'ok',msg:'cannot get ships data, try after some time'})
         }
     })
 })

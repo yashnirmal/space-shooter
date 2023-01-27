@@ -6,7 +6,7 @@ export default function Scoreboard() {
   const [scoreData,setScoreData] = useState([])
 
   function getScoreboardData(id){
-    fetch(`http://localhost:5050/scoreboard/${id}`)
+    fetch(`${process.env.REACT_APP_BASE_URL}/scoreboard/${id}`)
     .then(res=>res.json())
     .then(data=>setScoreData(data.data.reverse()))
     .catch((err)=>{

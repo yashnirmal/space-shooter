@@ -6,7 +6,7 @@ export default function Skins() {
   const [skins,setSkins] = useState([])
 
   function fetchSkins(){
-    fetch("http://localhost:5050/ships")
+    fetch(`${process.env.REACT_APP_BASE_URL}/ships`)
     .then((res)=>res.json())
     .then(data=>{
       if(data.status==='ok')

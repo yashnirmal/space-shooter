@@ -44,7 +44,7 @@ export default function Signup() {
       body: JSON.stringify({ username, password }),
     };
 
-    fetch("http://localhost:5050/signup", reqOptions)
+    fetch(`${process.env.REACT_APP_BASE_URL}/signup`, reqOptions)
       .then((res) => res.json())
       .then((data) => {
         setErrorMsg(data.msg);
