@@ -11,6 +11,8 @@ let initialDifficulty = null;
 
 const CANVAS_WIDTH = canvas.width
 const CANVAS_HEIGHT = canvas.height
+// import axios from 'axios'
+// import jwt_decode from 'jwt-decode'
 
 
 if(localStorage.getItem('game-level')!=null){
@@ -96,7 +98,7 @@ class Game{
     }
     if (gameScore[initialDifficulty]<this.score){
       gameScore[initialDifficulty]=this.score;
-    } 
+    }
     localStorage.setItem('game-score',JSON.stringify(gameScore))
   }
 }

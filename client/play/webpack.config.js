@@ -1,5 +1,6 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
+import webpack from 'webpack';
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -15,7 +16,12 @@ export default  {
 			type:"module"
 		}
 	},
-	  experiments: {
-	    outputModule: true,
-	  },
+	experiments: {
+		outputModule: true,
+	},
+	plugins: [
+		new webpack.EnvironmentPlugin({
+			API:"https://backend-space-shooter.vercel.app"
+		})
+	]
 }
