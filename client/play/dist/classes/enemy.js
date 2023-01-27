@@ -1,7 +1,7 @@
 class Enemy {
   constructor(moveType = "zig-zag", x = null, y = null) {
     const img = new Image();
-    img.src = "../assets/pics/enemy.png";
+    img.src = "./assets/pics/enemy.png";
     this.image = img;
     this.spriteWidth = 431;
     this.spriteHeight = 431;

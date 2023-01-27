@@ -31,7 +31,7 @@ class Game{
   constructor(){
     this.gameOver = true;
     this.gameSpeed = 0;
-    this.music = new Audio("../assets/sounds/music/music1.mp3");
+    this.music = new Audio("./assets/sounds/music/music1.mp3");
     this.music.loop = true;
     this.isSfxOn = true;
     this.difficulty = localStorage.getItem("game-level") || "easy";
