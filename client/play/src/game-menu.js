@@ -13,7 +13,6 @@ import jwt_decode from 'jwt-decode'
 
 
 const BASE_URL = process.env.API
-console.log(process.env.API)
 // const BASE_URL = 'http://localhost:5050'
 
 

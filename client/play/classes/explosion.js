@@ -9,9 +9,9 @@ class Explosion {
     this.frame = 0;
     this.slower = 0;
     this.image = new Image();
-    this.image.src = "./assets/pics/boom.png";
+    this.image.src = "../assets/pics/boom.png";
     this.sound = new Audio();
-    this.sound.src = "./assets/sounds/sfx/explosion.mp3";
+    this.sound.src = "../assets/sounds/sfx/explosion.mp3";
     this.doGameOverWithThisExp = gmOver;
   }
 

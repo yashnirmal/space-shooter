@@ -1,7 +1,7 @@
 class Asteroid{
     constructor(){
         const img = new Image()
-        img.src = "./assets/pics/asteroid.png"
+        img.src = "../assets/pics/asteroid.png"
         this.image = img
         this.spriteWidth = 290
         this.spriteHeight = 250
