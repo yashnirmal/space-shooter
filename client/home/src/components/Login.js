@@ -29,6 +29,7 @@ export default function Login() {
       if(data.status==='ok'){
         localStorage.setItem('usertoken',data.user)
         navigate("/")
+        
       }
     })
   }

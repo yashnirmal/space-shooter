@@ -211,8 +211,8 @@ app.post('/checkout', async (req, res) => {
       },
     ],
     mode: 'payment',
-    success_url: "http://localhost:3000/payment?success=true",
-    cancel_url: "http://localhost:3000/payment?canceled=true",
+    success_url: `${process.env.FRONTEND_URL}/payment?success=true`,
+    cancel_url: `${process.env.FRONTEND_URL}/payment?canceled=true`,
     metadata:{skinid:req.body.skinid,playerid:req.body.playerid}
   });
 
@@ -220,19 +220,33 @@ app.post('/checkout', async (req, res) => {
 });
 
 
-app.post('/webhook',bodyParser.raw({type:'application/json'}),(req,res)=>{
+app.post('/webhook',bodyParser.raw({type:'application/json'}),async (req,res)=>{
     const payload = req.body
     console.log(payload)
     const signature = req.headers['stripe-signature']
 
-    let event = stripe.webhooks.constructEvent(payload, signature, process.env.STRIPE_WEBHOOK_SIGNING_SECRET);
+    let event;
+
+    try {
+        event = stripe.webhooks.constructEvent(payload, signature, process.env.STRIPE_WEBHOOK_SIGNING_SECRET);
+    } catch (err) {
+        return response.status(400).send(`Webhook Error: ${err.message}`);
+    }
 
 
-    // console.log(event)
+    console.log(event)
 
     if(event?.type==='checkout.session.completed'){
         const metadata = event.data?.object?.metadata;
         const paymentStatus = event.data?.object?.payment_status;
+        console.log(metadata)
+
+        const sessionWithLineItems = await stripe.checkout.sessions.retrieve(
+          session.id,
+          {
+            expand: ['line_items'],
+          }
+        );
 
         if(paymentStatus==='paid'){
             console.log("Payment succeeded")
