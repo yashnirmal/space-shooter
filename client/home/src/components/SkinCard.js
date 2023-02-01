@@ -23,7 +23,7 @@ export default function SkinCard(props) {
       	<form action={`${process.env.REACT_APP_BASE_URL}/checkout`} method="POST">
         <input type="hidden" name="skinprice" id="skinprice" value={props.price}/>
         <input type="hidden" name="skinid" id="skinid" value={props.id} />
-        <input type="hidden" name="playerid" id="playerid" value={localStorage.getItem('usertoken')?jwt_decode(localStorage.getItem('usertoken')):null} />
+        <input type="hidden" name="playerid" id="playerid" value={jwt_decode(localStorage.getItem('usertoken')).username} />
           <button onClick={unlockBtnClicked}>
             Unlock
           </button>

@@ -201,6 +201,14 @@ app.post('/checkout', async (req, res) => {
       currency: 'inr',
       product: product.id,
     });
+
+    const customer = await stripe.customers.create({
+        metadata:{
+            skinid:req.body.skinid,
+            playerid:req.body.playerid
+        }
+
+    })
     
     const session = await stripe.checkout.sessions.create({
     line_items: [
@@ -210,60 +218,63 @@ app.post('/checkout', async (req, res) => {
         quantity: 1,
       },
     ],
+    customer:customer.id,
     mode: 'payment',
     success_url: `${process.env.FRONTEND_URL}/payment?success=true`,
     cancel_url: `${process.env.FRONTEND_URL}/payment?canceled=true`,
-    metadata:{skinid:req.body.skinid,playerid:req.body.playerid}
   });
 
-  res.redirect(303, session.url);
+  res.redirect(303,session.url);
 });
+
+
+async function addShipToPlayer(playerId,skinId){
+    try{
+        const result = await Player.updateOne({username:playerId},{$push:{ships:skinId}})
+        console.log("Ship Added")
+        // res.status(200).send({status:'ok',msg:'New ship unlocked'})
+    }
+    catch(err){
+        console.log("Erro in Adding ship",err)
+        // res.status(500).send({status:'error',msg:'server error! ship not added'})
+    }
+}
 
 
 app.post('/webhook',bodyParser.raw({type:'application/json'}),async (req,res)=>{
     const payload = req.body
-    console.log(payload)
     const signature = req.headers['stripe-signature']
 
-    let event;
+    let data;
+    let eventType;
+    // if(process.env.STRIPE_WEBHOOK_SIGNING_SECRET){
+    //     let event;
+    //     try {
+    //         event = stripe.webhooks.constructEvent(payload, signature, process.env.STRIPE_WEBHOOK_SIGNING_SECRET);
+    //         console.log("Webhook verified")
+    //     } catch (err) {
+    //         return res.status(400).send(`Webhook Error: ${err.message}`);
+    //     }
+    //     data = event.data.object;
+    //     eventType = event.type
+    // }else{
+        data = req.body.data.object
+        eventType = req.body.type
+    // }
 
-    try {
-        event = stripe.webhooks.constructEvent(payload, signature, process.env.STRIPE_WEBHOOK_SIGNING_SECRET);
-    } catch (err) {
-        return response.status(400).send(`Webhook Error: ${err.message}`);
+
+    if(eventType==='checkout.session.completed'){
+        stripe.customers.retrieve(data.customer)
+        .then((customer)=>{
+            let playerId = customer.metadata.playerid
+            let skinId = customer.metadata.skinid
+            console.log(skinId,"added to",playerId)
+            addShipToPlayer(playerId,skinId)
+        })
+        .catch((err)=>{
+            console.log(err.message)
+        })
     }
-
-
-    console.log(event)
-
-    if(event?.type==='checkout.session.completed'){
-        const metadata = event.data?.object?.metadata;
-        const paymentStatus = event.data?.object?.payment_status;
-        console.log(metadata)
-
-        const sessionWithLineItems = await stripe.checkout.sessions.retrieve(
-          session.id,
-          {
-            expand: ['line_items'],
-          }
-        );
-
-        if(paymentStatus==='paid'){
-            console.log("Payment succeeded")
-            // append the ship to the player
-            Player.updateOne({_id:metadata.playerid},
-                {$push:{ships:metadata.skinid}},(err,data)=>{
-                    if(!err && data){
-                        res.status(200).send({status:'ok',msg:'ship added to players collection'})
-                    }else{
-                        res.status(500).send({status:'ok',msg:'unable to add ship to players collection'})
-                    }
-                })
-        }else{
-            console.log("Payment Failed")
-        }
-    }
-
 
     res.status(200).end()
 })
