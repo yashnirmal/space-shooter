@@ -23,7 +23,7 @@ export default function Navbar() {
   return (
     <div className="navbar">
       <Link className="logo" to="/">
-        SpaceWars
+        SpaceShooter
       </Link>
       <div>
         <Link to="/">Home</Link>
