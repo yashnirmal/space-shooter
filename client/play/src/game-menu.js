@@ -8,9 +8,9 @@ const skinCont = document.querySelector('.skin-cont')
 const menuLoginBtn = document.querySelector("#menu-login-btn")
 const loginBtn = document.querySelector('.login-btn')
 const logoutBtn = document.querySelector('.logout-btn')
+const skinCardBtn = document.querySelectorAll('.skin-card button')
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
-
 
 const BASE_URL = process.env.API
 // const BASE_URL = 'http://localhost:5050'
@@ -101,14 +101,34 @@ subMenuBackBtn.forEach(backBtn=>{
     });
 })
 
-function appendShip(shipUrl){
+
+
+function chooseSkinBtn(e){
+    if(e.target.parentElement.children[0].src==='./assets/pics/hero.png'){
+        localStorage.removeItem('skin-chosen')
+        localStorage.removeItem(401)
+        localStorage.removeItem(317) 
+        subMenuBackBtn[3].click()
+        return
+    }
+    localStorage.setItem("skin-chosen",e.target.parentElement.children[0].src);
+    localStorage.setItem("skin-width",e.target.parentElement.children[0].dataset.width)
+    localStorage.setItem("skin-height",e.target.parentElement.children[0].dataset.height)
+    subMenuBackBtn[3].click()
+}
+
+
+function appendShip(shipUrl,width,height){
     const div = document.createElement('div')
     div.classList.add('skin-card')
     const img = document.createElement('img')
     img.src = shipUrl
+    img.dataset.width=width
+    img.dataset.height=height
     const button = document.createElement('button')
-    button.innerText='Chosen'
+    button.innerText='Choose'
     button.dataset.chosen='yes'
+    button.addEventListener('click',chooseSkinBtn)   // called in inedx.js file
     div.appendChild(img)
     div.appendChild(button)
     skinCont.appendChild(div)
@@ -137,7 +157,7 @@ function getPlayerSkins(){
             .then((data)=>{
                 let singleShip = data.data.data
                 // append the ship 
-                appendShip(singleShip.file)
+                appendShip(singleShip.file,singleShip.width,singleShip.height)
             })
         }
     })
@@ -146,6 +166,8 @@ function getPlayerSkins(){
         alert('Something went wrong, try again after sometime')
     })    
 }
+
+
 
 
 loginBtn.addEventListener('click',()=>{

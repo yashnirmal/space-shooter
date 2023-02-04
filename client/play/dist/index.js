@@ -1,4 +1,5 @@
 const gameMenu = document.querySelector('.menu')
+const subMenuBackBtn = document.querySelectorAll('#sub-menu-back-btn');
 const startGameBtn = document.querySelector('#start-game-btn')
 const resumeGameBtn = document.querySelector('#resume-game-btn')
 const musicSfxToggle = document.querySelectorAll("#menu-music-sfx>button");
@@ -80,6 +81,9 @@ class Game{
     this.doGameOver()
     enemyWaveController()
     heroShip = new SpaceShip()
+    heroShip.image.src = localStorage.getItem('skin-chosen')||'./assets/pics/hero.png';
+    heroShip.spriteWidth = parseInt(localStorage.getItem('skin-width'))||401;
+    heroShip.spriteHeight = parseInt(localStorage.getItem('skin-height'))||317;
     this.resumeGame();
   }
 
@@ -316,13 +320,15 @@ menuLvlBtns.forEach(btn=>{
     game.difficulty = lvl
     localStorage.setItem('game-level',lvl)
     mainMenuChooseLvlBtn.innerText = "Choose Level : "+
-      lvl["0"].toUpperCase() + lvl.substring(1);
+    lvl["0"].toUpperCase() + lvl.substring(1);
     subMenuBackBtn[0].click()
 
     changeGameDifficultyParameters()
     setResumeGameBtnVisibility()
   })
 })
+
+
 
 function changeGameDifficultyParameters(){
   // heroship.firingSpeed = 5+2*game.firingSpeed;
@@ -361,3 +367,4 @@ function setResumeGameBtnVisibility() {
     resumeGameBtn.dataset.status = "show";
   }
 }
+
