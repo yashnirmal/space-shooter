@@ -80,6 +80,7 @@ class Game{
   startNewGame(){
     this.doGameOver()
     enemyWaveController()
+
     heroShip = new SpaceShip()
     heroShip.image.src = localStorage.getItem('skin-chosen')||'./assets/pics/hero.png';
     heroShip.spriteWidth = parseInt(localStorage.getItem('skin-width'))||401;
@@ -108,6 +109,8 @@ class Game{
 }
 
 const game = new Game()
+changeGameDifficultyParameters()
+
 let heroShip = new SpaceShip();
 const stars = [];
 const bullets = [];
@@ -254,7 +257,7 @@ function checkCollision() {
     bullets.forEach((b,b_idx)=>{
             enemies.forEach((e, e_idx) => {
                 if (
-                    (b.y<(e.y+e.height) && (b.y+b.height)<(e.y+e.height)) &&
+                    (b.y<(e.y+e.height) && (b.y)>(e.y)) &&
                 (b.x>e.x && (b.x+b.width)<(e.x+e.width))
             ) {
                 explosions.push(new Explosion(e.x+e.width/2,e.y+e.height/2))
@@ -265,12 +268,12 @@ function checkCollision() {
         })
     })
 
-    // checking collision between asterois and heroship
+    // checking collision between asteroid and heroship
     asteroids.forEach(as=>{
       if((as.y+as.height>heroShip.y) && ((as.x+as.width>heroShip.x)&&(as.x+as.width<heroShip.x+heroShip.width) || (as.x>heroShip.x)&&(as.x<heroShip.x+heroShip.width))){
         explosions.push(new Explosion(heroShip.x+heroShip.width/2,heroShip.y+heroShip.height/2,true))
         game.pauseGame()
-        heroShip=null
+        // heroShip=null
       }
     })
 }
@@ -322,20 +325,16 @@ menuLvlBtns.forEach(btn=>{
     mainMenuChooseLvlBtn.innerText = "Choose Level : "+
     lvl["0"].toUpperCase() + lvl.substring(1);
     subMenuBackBtn[0].click()
-
     changeGameDifficultyParameters()
     setResumeGameBtnVisibility()
+    window.location.reload()
+
   })
 })
 
 
 
 function changeGameDifficultyParameters(){
-  // heroship.firingSpeed = 5+2*game.firingSpeed;
-  //enemy.downSpeed = 1+game.downSpeed;
-  // enemyNumber = Math.random()*2+game.enemyNumber
-  // wave is sent every 10 seconds
-  // enemywave interval = 10000*game.enemyWaveInterval
   if (game.difficulty === "easy") {
     game.firingSpeed = 2;
     game.enemyNumber = 7;
