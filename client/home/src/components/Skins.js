@@ -6,7 +6,7 @@ export default function Skins() {
   const [skins,setSkins] = useState([])
 
   function fetchSkins(){
-    fetch(`${process.env.REACT_APP_BASE_URL}/ships`)
+    fetch(`https://backend-space-shooter.vercel.app/ships`)
     .then((res)=>res.json())
     .then(data=>{
       if(data.status==='ok')
